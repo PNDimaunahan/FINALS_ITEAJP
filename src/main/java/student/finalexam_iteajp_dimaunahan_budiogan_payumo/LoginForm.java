@@ -1,4 +1,8 @@
 package student.finalexam_iteajp_dimaunahan_budiogan_payumo;
+
+import java.awt.Toolkit;
+import java.net.URL;
+
 /**
  *
  * @author Paul Dimaunahan
@@ -29,6 +33,7 @@ public class LoginForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setIconImages(null);
         setPreferredSize(new java.awt.Dimension(800, 500));
         setResizable(false);
 
