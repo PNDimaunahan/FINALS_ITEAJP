@@ -1,7 +1,11 @@
 package student.finalexam_iteajp_dimaunahan_budiogan_payumo;
 
-import java.awt.Toolkit;
-import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -10,8 +14,11 @@ import java.net.URL;
 public class LoginForm extends javax.swing.JFrame {
 
     public LoginForm() {
-        initComponents();
+        initComponents();       
+        // Add action listener to the login button
+        loginButton.addActionListener(e -> login());
     }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -33,7 +40,6 @@ public class LoginForm extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setIconImages(null);
         setPreferredSize(new java.awt.Dimension(800, 500));
         setResizable(false);
 
@@ -182,17 +188,106 @@ public class LoginForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void userFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userFieldActionPerformed
-        // TODO add your handling code here:
+        //
     }//GEN-LAST:event_userFieldActionPerformed
 
     private void passwordFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordFieldActionPerformed
-        // TODO add your handling code here:
+        //
     }//GEN-LAST:event_passwordFieldActionPerformed
 
     private void chooseUserTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseUserTypeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_chooseUserTypeActionPerformed
+    
+    private void login() {
+    String username = userField.getText();
+    String password = new String(passwordField.getPassword());
+    String userType = (String) chooseUserType.getSelectedItem();
+    String dbUrl = "jdbc:sqlserver://LAPTOP-GAj60UQH\\SQLEXPRESS:1433;databaseName=finalExam_ITEAJP;user=sa;password=Pa$$w0rd;;encrypt=true;trustServerCertificate=true;";
+    
+    int[] roleIds = {1, 2, 3};
+    int selectedIndex = chooseUserType.getSelectedIndex();
+    int roleId = roleIds[selectedIndex];
+    
+    try (Connection connection = DriverManager.getConnection(dbUrl)) {
+        if (validateLogin(username, password, userType, connection)) {
+            openDashboardWindow(userType);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } catch (SQLException e) {
+        // Handle any database connection errors
+        e.printStackTrace();
+    }
+}
 
+private boolean validateLogin(String username, String password, String userType, Connection connection) {
+    boolean isValid = false; // Flag to track if the login is valid
+
+    try {
+        // Prepare the SQL query to select the user based on username, password, and role
+        String sql = "SELECT * FROM [User] WHERE Username = ? AND Password = ? AND RoleId = ?";
+        
+        // Create a PreparedStatement to execute the query
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, username);
+        statement.setString(2, password);
+        
+        // Map the userType to the corresponding role value
+        int role;
+        switch(userType) {
+            case "System Admin":
+                role = 1;
+                break;
+            case "Manager":
+                role = 2;
+                break;
+            case "Regular User":
+                role = 3;
+                break;
+            default:
+                role = -1; // Invalid role
+        }
+        
+        statement.setInt(3, role);
+
+        // Execute the query
+        ResultSet resultSet = statement.executeQuery();
+        // Check if any rows are returned
+        if (resultSet.next()) {
+            // If a row is returned, the login is valid
+            isValid = true;
+        }
+        
+        // Close the ResultSet and PreparedStatement
+        resultSet.close();
+        statement.close();
+    } catch (SQLException e) {
+        // Handle any database errors
+        e.printStackTrace();
+    }
+
+    // Return the result of the validation
+    return isValid;
+}
+
+
+
+
+    private void openDashboardWindow(String userType) {
+        // Open appropriate dashboard window based on user type
+        if (userType.equals("System Admin")) {
+            AdminDashboard adminDashboard = new AdminDashboard();
+            adminDashboard.setVisible(true);
+        } else if (userType.equals("Manager")) {
+            //
+        } else if (userType.equals("Regular User")) {
+            //
+        }
+        // Close the login window
+        dispose();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Left;
     private javax.swing.JPanel Right;
