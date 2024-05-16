@@ -134,7 +134,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         );
 
         getContentPane().add(Upper);
-        Upper.setBounds(0, 0, 838, 120);
+        Upper.setBounds(0, 0, 841, 120);
 
         Right.setBackground(new java.awt.Color(204, 204, 204));
         Right.setMaximumSize(new java.awt.Dimension(500, 340));
@@ -268,38 +268,34 @@ public class AdminDashboard extends javax.swing.JFrame {
         LeftLayout.setHorizontalGroup(
             LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LeftLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LeftLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jTextField1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(FindButton, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(LeftLayout.createSequentialGroup()
                         .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(LeftLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(editButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(addButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(delButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))))
-                            .addGroup(LeftLayout.createSequentialGroup()
-                                .addGap(59, 59, 59)
-                                .addComponent(jLabel2))
-                            .addGroup(LeftLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(editButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(addButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(delButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 1, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(LeftLayout.createSequentialGroup()
+                .addGap(58, 58, 58)
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         LeftLayout.setVerticalGroup(
             LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LeftLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
+                .addContainerGap()
                 .addComponent(jLabel2)
-                .addGap(27, 27, 27)
-                .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(LeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(FindButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
@@ -312,7 +308,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 .addComponent(viewButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addGap(0, 56, Short.MAX_VALUE))
         );
 
         getContentPane().add(Left);
@@ -326,10 +322,11 @@ public class AdminDashboard extends javax.swing.JFrame {
         String email = JOptionPane.showInputDialog(this, "Enter Email:");
         String fullname = JOptionPane.showInputDialog(this, "Enter Fullname:");
         String role = JOptionPane.showInputDialog(this, "Enter Role:");
+        String password = JOptionPane.showInputDialog(this, "Enter Password:"); // Added password input
 
-        if (username != null && email != null && fullname != null && role != null) {
+        if (username != null && email != null && fullname != null && role != null && password != null) {
             try {
-                userService.addUser(new User(username, email, fullname, role));
+                userService.addUser(new User(username, email, fullname, role, password));
                 loadUserData();
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this, "Error adding user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -339,23 +336,34 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
         int selectedRow = jTable1.getSelectedRow();
-        if (selectedRow >= 0) {
-            String username = (String) jTable1.getValueAt(selectedRow, 0);
-            String newEmail = JOptionPane.showInputDialog(this, "Enter new Email:");
-            String newFullname = JOptionPane.showInputDialog(this, "Enter new Fullname:");
-            String newRole = JOptionPane.showInputDialog(this, "Enter new Role:");
+    if (selectedRow >= 0) {
+        String username = (String) jTable1.getValueAt(selectedRow, 0);
+        String newEmail = JOptionPane.showInputDialog(this, "Enter new Email:");
+        String newFullname = JOptionPane.showInputDialog(this, "Enter new Fullname:");
+        String newRole = JOptionPane.showInputDialog(this, "Enter new Role:");
 
-            if (newEmail != null && newFullname != null && newRole != null) {
-                try {
-                    userService.updateUser(new User(username, newEmail, newFullname, newRole));
-                    loadUserData();
-                } catch (SQLException e) {
-                    JOptionPane.showMessageDialog(this, "Error updating user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        if (newEmail != null || newFullname != null || newRole != null) {
+            try {
+                // Get the old values if new values are not provided
+                if (newEmail == null) {
+                    newEmail = (String) jTable1.getValueAt(selectedRow, 1);
                 }
+                if (newFullname == null) {
+                    newFullname = (String) jTable1.getValueAt(selectedRow, 2);
+                }
+                if (newRole == null) {
+                    newRole = (String) jTable1.getValueAt(selectedRow, 3);
+                }
+
+                userService.updateUser(new User(username, newEmail, newFullname, newRole));
+                loadUserData();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error updating user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Select a user to edit.", "Warning", JOptionPane.WARNING_MESSAGE);
         }
+    } else {
+        JOptionPane.showMessageDialog(this, "Select a user to edit.", "Warning", JOptionPane.WARNING_MESSAGE);
+    }
     }//GEN-LAST:event_editButtonActionPerformed
 
     private void FindButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FindButtonActionPerformed
@@ -402,28 +410,31 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
          this.dispose();
+         LoginForm LoginFrame = new LoginForm();
+         LoginFrame.setVisible(true);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
-        private void loadUserData() {
-        try {
-            List<User> users = userService.getAllUsers();
-            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0); // Clear existing data
+    private void loadUserData() {
+    try {
+        List<User> users = userService.getAllUsers();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Clear existing data
 
-            int activeUsersCount = 0;
-            for (User user : users) {
-                model.addRow(new Object[]{user.getUsername(), user.getEmail(), user.getFullname(), user.getRole()});
-                if (user.isActive()) {
-                    activeUsersCount++;
-                }
+        int activeUsersCount = 0;
+        for (User user : users) {
+            model.addRow(new Object[]{user.getUsername(), user.getEmail(), user.getFullname(), user.getRole()});
+            if (user.isActive()) {
+                activeUsersCount++;
             }
-
-            usersNumber.setText("Users: " + users.size());
-            userActive.setText("Active: " + activeUsersCount);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error loading user data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+
+        usersNumber.setText("Users: " + users.size());
+        userActive.setText("Active: " + activeUsersCount);
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error loading user data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
+
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

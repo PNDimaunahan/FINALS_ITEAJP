@@ -51,26 +51,28 @@ public class UserService {
         return users;
     }
 
-    public void addUser(User user) throws SQLException {
-        String sql = "INSERT INTO [User] (Username, Email, Fullname, RoleId) VALUES (?, ?, ?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection(DB_URL);
-             PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, user.getUsername());
-            stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getFullname());
-            stmt.setInt(4, getRoleId(user.getRole()));
-            stmt.executeUpdate();
-        }
+   public void addUser(User user) throws SQLException {
+    String sql = "INSERT INTO [User] (Username, Password, Email, Fullname, RoleId) VALUES (?, ?, ?, ?, ?)";
+    try (Connection connection = DatabaseConnection.getConnection(DB_URL);
+         PreparedStatement stmt = connection.prepareStatement(sql)) {
+        stmt.setString(1, user.getUsername());
+        stmt.setString(2, user.getPassword()); // Assuming getPassword() returns the password
+        stmt.setString(3, user.getEmail());
+        stmt.setString(4, user.getFullname());
+        stmt.setInt(5, getRoleId(user.getRole()));
+        stmt.executeUpdate();
     }
+}
 
     public void updateUser(User user) throws SQLException {
-        String sql = "UPDATE [User] SET Email = ?, Fullname = ?, RoleId = ? WHERE Username = ?";
+        String sql = "UPDATE [User] SET Email = ?, Fullname = ?, RoleId = ?, Password = ? WHERE Username = ?";
         try (Connection connection = DatabaseConnection.getConnection(DB_URL);
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, user.getEmail());
             stmt.setString(2, user.getFullname());
             stmt.setInt(3, getRoleId(user.getRole()));
-            stmt.setString(4, user.getUsername());
+            stmt.setString(4, user.getPassword());
+            stmt.setString(5, user.getUsername());
             stmt.executeUpdate();
         }
     }
