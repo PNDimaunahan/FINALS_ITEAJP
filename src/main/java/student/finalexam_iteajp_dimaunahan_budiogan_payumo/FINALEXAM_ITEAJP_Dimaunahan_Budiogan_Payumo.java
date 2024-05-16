@@ -8,6 +8,5 @@ public class FINALEXAM_ITEAJP_Dimaunahan_Budiogan_Payumo {
         LoginFrame.setVisible(true);
         LoginFrame.pack();
         LoginFrame.setLocationRelativeTo(null);
-
     }
 }

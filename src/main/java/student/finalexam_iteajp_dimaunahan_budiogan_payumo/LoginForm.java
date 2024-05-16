@@ -217,10 +217,15 @@ public class LoginForm extends javax.swing.JFrame {
         if (userType.equals("System Admin")) {
             AdminDashboard adminDashboard = new AdminDashboard();
             adminDashboard.setVisible(true);
+            adminDashboard.setLocationRelativeTo(null);
         } else if (userType.equals("Manager")) {
-            //
+            ManagerDashboard managerDashboard = new ManagerDashboard();
+            managerDashboard.setVisible(true);
+            managerDashboard.setLocationRelativeTo(null);
         } else if (userType.equals("Regular User")) {
-            //
+            RegularUserPage regularUserPage = new RegularUserPage();
+            regularUserPage.setVisible(true);
+            regularUserPage.setLocationRelativeTo(null);
         }
         // Close the login window
         dispose();

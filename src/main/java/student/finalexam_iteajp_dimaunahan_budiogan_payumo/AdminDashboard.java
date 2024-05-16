@@ -412,6 +412,7 @@ public class AdminDashboard extends javax.swing.JFrame {
          this.dispose();
          LoginForm LoginFrame = new LoginForm();
          LoginFrame.setVisible(true);
+         LoginFrame.setLocationRelativeTo(null);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
     private void loadUserData() {
@@ -429,7 +430,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         }
 
         usersNumber.setText("Users: " + users.size());
-        userActive.setText("Active: " + activeUsersCount);
+        userActive.setText("Hello!️");
     } catch (SQLException e) {
         JOptionPane.showMessageDialog(this, "Error loading user data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
