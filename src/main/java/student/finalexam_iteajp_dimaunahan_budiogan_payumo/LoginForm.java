@@ -1,10 +1,5 @@
 package student.finalexam_iteajp_dimaunahan_budiogan_payumo;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,8 +9,9 @@ import javax.swing.JOptionPane;
 public class LoginForm extends javax.swing.JFrame {
 
     public LoginForm() {
-        initComponents();       
-        // Add action listener to the login button
+        //components
+        initComponents();
+        // listener
         loginButton.addActionListener(e -> login());
     }
     

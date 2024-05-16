@@ -7,6 +7,7 @@ public class FINALEXAM_ITEAJP_Dimaunahan_Budiogan_Payumo {
         LoginForm LoginFrame = new LoginForm();
         LoginFrame.setVisible(true);
         LoginFrame.pack();
-        LoginFrame.setLocationRelativeTo(null); 
+        LoginFrame.setLocationRelativeTo(null);
+
     }
 }
