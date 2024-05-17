@@ -4,6 +4,11 @@
  */
 package student.finalexam_iteajp_dimaunahan_budiogan_payumo;
 
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Paul Dimaunahan
@@ -13,9 +18,27 @@ public class ManageProduct extends javax.swing.JFrame {
     /**
      * Creates new form ManageProduct
      */
+    private ProductService productService;
+    
     public ManageProduct() {
         initComponents();
+        productService = new ProductService();
+        loadProducts();
     }
+    
+  private void loadProducts() {
+    try {
+        List<Product> products = productService.getAllProducts(true); // Include ProductCode
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        for (Product product : products) {
+            model.addRow(new Object[]{product.getProductCode(), product.getProductName(), product.getSize(), product.getColor(), product.getPrice()});
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error loading products: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -28,10 +51,10 @@ public class ManageProduct extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        findButton1 = new javax.swing.JButton();
-        findButton2 = new javax.swing.JButton();
-        findButton3 = new javax.swing.JButton();
-        findButton4 = new javax.swing.JButton();
+        addButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         findButton = new javax.swing.JButton();
@@ -39,8 +62,8 @@ public class ManageProduct extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Manage Product");
         setMinimumSize(new java.awt.Dimension(800, 500));
-        setPreferredSize(new java.awt.Dimension(800, 500));
         getContentPane().setLayout(null);
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
@@ -49,25 +72,45 @@ public class ManageProduct extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Manage Products");
 
-        findButton1.setBackground(new java.awt.Color(0, 51, 255));
-        findButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        findButton1.setForeground(new java.awt.Color(255, 255, 255));
-        findButton1.setText("Add Product");
+        addButton.setBackground(new java.awt.Color(0, 51, 255));
+        addButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        addButton.setForeground(new java.awt.Color(255, 255, 255));
+        addButton.setText("Add Product");
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
 
-        findButton2.setBackground(new java.awt.Color(0, 51, 255));
-        findButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        findButton2.setForeground(new java.awt.Color(255, 255, 255));
-        findButton2.setText("Edit Product");
+        editButton.setBackground(new java.awt.Color(0, 51, 255));
+        editButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        editButton.setForeground(new java.awt.Color(255, 255, 255));
+        editButton.setText("Edit Product");
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
 
-        findButton3.setBackground(new java.awt.Color(0, 51, 255));
-        findButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        findButton3.setForeground(new java.awt.Color(255, 255, 255));
-        findButton3.setText("Delete Product");
+        deleteButton.setBackground(new java.awt.Color(0, 51, 255));
+        deleteButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        deleteButton.setForeground(new java.awt.Color(255, 255, 255));
+        deleteButton.setText("Delete Product");
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
 
-        findButton4.setBackground(new java.awt.Color(0, 51, 255));
-        findButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        findButton4.setForeground(new java.awt.Color(255, 255, 255));
-        findButton4.setText("Back");
+        backButton.setBackground(new java.awt.Color(0, 51, 255));
+        backButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        backButton.setForeground(new java.awt.Color(255, 255, 255));
+        backButton.setText("Back");
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -77,10 +120,10 @@ public class ManageProduct extends javax.swing.JFrame {
                 .addGap(61, 61, 61)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(findButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(findButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(findButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(findButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(addButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(editButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(deleteButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(backButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -89,13 +132,13 @@ public class ManageProduct extends javax.swing.JFrame {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel1)
                 .addGap(45, 45, 45)
-                .addComponent(findButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(findButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(findButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 156, Short.MAX_VALUE)
-                .addComponent(findButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(backButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80))
         );
 
@@ -106,6 +149,11 @@ public class ManageProduct extends javax.swing.JFrame {
         findButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         findButton.setForeground(new java.awt.Color(255, 255, 255));
         findButton.setText("Find");
+        findButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                findButtonActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -115,14 +163,14 @@ public class ManageProduct extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Product Code", "Product", "Size", "Color", "Price"
+                "ProductCode", "Product", "Size", "Color", "Price"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Float.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, true, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -167,6 +215,125 @@ public class ManageProduct extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+            String productCode = JOptionPane.showInputDialog(this, "Enter Product Code:");
+            if (productCode != null) {
+                String productName = JOptionPane.showInputDialog(this, "Enter Product Name:");
+                if (productName != null) {
+                    String description = JOptionPane.showInputDialog(this, "Enter Description:");
+                    if (description != null) {
+                        String color = JOptionPane.showInputDialog(this, "Enter Color:");
+                        if (color != null) {
+                            String size = JOptionPane.showInputDialog(this, "Enter Size:");
+                            if (size != null) {
+                                String priceInput = JOptionPane.showInputDialog(this, "Enter Price:");
+                                if (priceInput != null) {
+                                    try {
+                                        float price = Float.parseFloat(priceInput);
+                                        Product product = new Product(productCode, productName, description, color, size, price);
+                                        productService.addProduct(product);
+                                        loadProducts(); // Refresh products after addition
+                                    } catch (NumberFormatException e) {
+                                        JOptionPane.showMessageDialog(this, "Invalid price format. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                                    } catch (SQLException e) {
+                                        JOptionPane.showMessageDialog(this, "Error adding product: " + e.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+               int selectedRow = jTable1.getSelectedRow();
+                if (selectedRow >= 0) {
+                    String productCode = (String) jTable1.getValueAt(selectedRow, 0);
+                    String newProductName = JOptionPane.showInputDialog(this, "Enter new Product Name:");
+                    String newDescription = JOptionPane.showInputDialog(this, "Enter new Description:");
+                    String newColor = JOptionPane.showInputDialog(this, "Enter new Color:");
+                    String newSize = JOptionPane.showInputDialog(this, "Enter new Size:");
+                    String newPriceString = JOptionPane.showInputDialog(this, "Enter new Price:");
+                    float newPrice = Float.parseFloat(newPriceString);
+
+                    if (newProductName != null || newDescription != null || newColor != null || newSize != null || newPriceString != null) {
+                        try {
+                            // Get the old values if new values are not provided
+                            if (newProductName == null) {
+                                newProductName = (String) jTable1.getValueAt(selectedRow, 1);
+                            }
+                            if (newDescription == null) {
+                                newDescription = (String) jTable1.getValueAt(selectedRow, 2);
+                            }
+                            if (newColor == null) {
+                                newColor = (String) jTable1.getValueAt(selectedRow, 3);
+                            }
+                            if (newSize == null) {
+                                newSize = (String) jTable1.getValueAt(selectedRow, 4);
+                            }
+                            if (newPriceString == null) {
+                                newPrice = Float.parseFloat((String) jTable1.getValueAt(selectedRow, 5));
+                            }
+
+                            productService.updateProduct(new Product(productCode, newProductName, newDescription, newColor, newSize, newPrice));
+                            loadProducts();
+                        } catch (SQLException e) {
+                            JOptionPane.showMessageDialog(this, "Error updating product: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (NumberFormatException e) {
+                            JOptionPane.showMessageDialog(this, "Invalid price format. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Select a product to edit.", "Warning", JOptionPane.WARNING_MESSAGE);
+                }
+    }//GEN-LAST:event_editButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+            int selectedRow = jTable1.getSelectedRow();
+            if (selectedRow >= 0) {
+                String productCode = (String) jTable1.getValueAt(selectedRow, 0);
+                int confirmation = JOptionPane.showConfirmDialog(this, "Are you sure you want to delete product with code: " + productCode + "?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    try {
+                        productService.deleteProduct(productCode);
+                        loadProducts();
+                    } catch (SQLException e) {
+                        JOptionPane.showMessageDialog(this, "Error deleting product: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Select a product to delete.", "Warning", JOptionPane.WARNING_MESSAGE);
+            }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+        this.dispose();
+        ManagerDashboard managerDashboard = new ManagerDashboard();
+        managerDashboard.setVisible(true);
+        managerDashboard.setLocationRelativeTo(null);
+    }//GEN-LAST:event_backButtonActionPerformed
+
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
+        String productCode = jTextField1.getText();
+        if (productCode != null && !productCode.isEmpty()) {
+            try {
+                Product product = productService.getProductByName(productCode);
+                if (product != null) {
+                    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                    model.setRowCount(0); // Clear the table
+                    model.addRow(new Object[]{product.getProductCode(), product.getProductName(), product.getColor(), product.getSize(), product.getPrice()});
+                } else {
+                    JOptionPane.showMessageDialog(this, "Product not found.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error finding product: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Enter a product name to search.", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_findButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -203,11 +370,11 @@ public class ManageProduct extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JButton findButton;
-    private javax.swing.JButton findButton1;
-    private javax.swing.JButton findButton2;
-    private javax.swing.JButton findButton3;
-    private javax.swing.JButton findButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

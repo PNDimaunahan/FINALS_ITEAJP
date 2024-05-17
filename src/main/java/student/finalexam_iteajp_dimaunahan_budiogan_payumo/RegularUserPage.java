@@ -36,7 +36,7 @@ public class RegularUserPage extends javax.swing.JFrame {
         try {
             DefaultTableModel productTableModel = (DefaultTableModel) jTable1.getModel();
             productTableModel.setRowCount(0);
-            for (Product product : productService.getAllProducts()) {
+            for (Product product : productService.getAllProducts(false)) { // Exclude ProductCode
                 productTableModel.addRow(new Object[]{product.getProductName(), product.getDescription(), product.getColor(), product.getSize(), product.getPrice()});
             }
         } catch (SQLException ex) {
@@ -44,6 +44,7 @@ public class RegularUserPage extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
